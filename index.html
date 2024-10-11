@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日期映射到24小时</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        input {
+            margin: 10px;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <h1>日期映射到24小时</h1>
+    <label for="startDate">开始日期:</label>
+    <input type="date" id="startDate"， value="2024-09-09">
+    <label for="endDate">结束日期:</label>
+    <input type="date" id="endDate"， value="2027-06-01">
+    <div class="result" id="result"></div>
+
+    <script>
+        const startDateInput = document.getElementById("startDate");
+        const endDateInput = document.getElementById("endDate");
+        const resultDiv = document.getElementById("result");
+
+        function updateMapping() {
+            const startDate = new Date(startDateInput.value);
+            const endDate = new Date(endDateInput.value);
+            const currentDate = new Date();
+
+            if (startDate && endDate && startDate < endDate) {
+                const totalDuration = endDate - startDate; // 毫秒
+                const elapsedDuration = currentDate - startDate; // 当前日期与开始日期间隔
+                const percentage = Math.min(Math.max(elapsedDuration / totalDuration, 0), 1); // 计算比例
+
+                // 映射到24小时
+                const totalSeconds = 24 * 60 * 60; // 24小时的总秒数
+                const mappedSeconds = Math.round(percentage * totalSeconds);
+                
+                // 计算时、分、秒
+                const hours = Math.floor(mappedSeconds / 3600);
+                const minutes = Math.floor((mappedSeconds % 3600) / 60);
+                const seconds = mappedSeconds % 60;
+
+                resultDiv.innerText = `当前日期对应的时间: ${hours}小时 ${minutes}分钟 ${seconds}秒`;
+            } else {
+                resultDiv.innerText = "请确保选择有效的开始和结束日期。";
+            }
+        }
+
+        startDateInput.addEventListener("change", updateMapping);
+        endDateInput.addEventListener("change", updateMapping);
+    </script>
+</body>
+</html>
